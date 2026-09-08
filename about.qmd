@@ -11,10 +11,11 @@ about:
     #   href: mailto:you@example.com
 ---
 
-<!-- TODO: replace with your real bio. -->
-Hi, I'm **treeahsee**. I'm an engineer learning the systems beneath machine
-learning from the ground up — and this is where I write what I learn, in my own
-words, until it sticks.
+Hi, I'm **treeahsee** — an engineer with the memory of a goldfish. If I read
+something once and nod along, it's gone by next week. My grug brain only holds
+onto an idea if I write it down in my own words, badly at first, until it makes
+sense.
 
-I care about understanding things well enough to explain them simply. If a note
-here reads like a textbook summary, it isn't done yet.
+This site is that pile of notes: mostly machine learning and the systems
+underneath it, re-explained until they stick. If a note here reads like a
+polished textbook summary, I probably didn't actually understand it yet.

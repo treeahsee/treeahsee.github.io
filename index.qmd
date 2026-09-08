@@ -11,10 +11,10 @@ listing:
   fields: [date, title, description, categories]
 ---
 
-<!-- TODO: replace with 2–3 real lines about you, and add email/other links. -->
-Learning notes, written to teach myself — mostly machine learning and the
-systems underneath it. I read a paper or pull apart a system, then write it back
-in my own words until it sticks.
+I forget things. Reading a paper once does basically nothing for my grug brain —
+it only sticks if I chew it up and write it back out in my own words. So this is
+that pile of notes: mostly machine learning and the systems underneath it,
+re-explained until my brain finally agrees to keep them.
 
 [GitHub](https://github.com/treeahsee)
 
