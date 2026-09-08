@@ -68,8 +68,8 @@ plot_fits(results);   # embeds the figure inline
 
 The `sum` column dips then explodes - that U-shape *is* the bias-variance tradeoff.
 Degree 1 is all bias (underfit), degree 12's variance blows up (overfit), degree 3
-is the sweet spot. Both the table and the figure above are generated live from
-`bias_variance_decomp.py` every time this page builds.
+is the sweet spot. Both the table and the figure above come straight from
+[`bias_variance_decomp.py`](https://github.com/treeahsee/treeahsee.github.io/blob/main/bias_variance_decomp.py).
 
 - Generalization becomes harder in higher dimensions as well. As the dimensions grow, the training set covers a dwindling fraction of your input space. In high
 dimensions all examples start to look alike.
