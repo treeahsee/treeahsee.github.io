@@ -11,8 +11,10 @@ about:
     #   href: mailto:you@example.com
 ---
 
-Hi, I'm **treeahsee** — an engineer with the memory of a goldfish. If I read
-something once and nod along, it's gone by next week. My grug brain only holds
+Hi, I'm **treeahsee**. I sit somewhere between data science, engineering, and
+business analytics, and I'm finishing a CS master's at Georgia Tech. I also have
+the memory of a goldfish. If I read something once and nod along, it's gone by
+next week. My grug brain only holds
 onto an idea if I write it down in my own words, badly at first, until it makes
 sense.
 

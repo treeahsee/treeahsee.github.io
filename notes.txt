@@ -1,7 +1,7 @@
 # A Few Useful Things to Know about Machine Learning
 
 ## What is learning in ML?
-- What really is machine learning — some data input that predicts some output you care about? How do I choose the prediction algorithm? I heard XGBoost is all you
+- What really is machine learning - some data input that predicts some output you care about? How do I choose the prediction algorithm? I heard XGBoost is all you
 need. Do we just throw XGBoost at all of our classification and regression problems? Maybe. We can also throw in k-means and maybe some reinforcement learning and then
 we have all of what we need.
 - But really we were partially right: machine learning takes some data input and returns a prediction. Does this dress make me look fat?  features [is_dress_black=1, can_see_toes=0] out[class1_youre_just_fat=1].
@@ -45,7 +45,7 @@ so it performs well against unseen input.
 - The limits to the training examples mean that data alone is not enough, and that every learner must embody some knowledge or assumptions beyond the data it's given
 in order to generalize beyond it. This also means choosing a representation means picking one that can fit to the domain knowledge.
 	- Take for example a house price prediction: the data alone isn't enough; the representation bakes in an assumption.
-	- Something like K-Nearest-Neighbor assumes locality — similar houses have similar prices.
+	- Something like K-Nearest-Neighbor assumes locality - similar houses have similar prices.
 	- Whereas a global linear function assumes price is one global formula over features.
 	- Domain experts already know this to some level; appraisers look at nearby comps to determine the price of your home.
 - In order to generalize there is a balance between a simple and complex representation. Our error can exist as incorrect assumptions about the data where we oversimplify the
@@ -100,7 +100,7 @@ also where we can add our domain intuition to modeling the data.
 - Different learners can carve very different decision boundaries but still classify most new points the same way.
 - So to a first approximation, once you have enough data, which algorithm you picked matters less than getting more of it.
 - Fixed size learners vs learners that grow with the data
-	- parametric: fixed capacity — add more samples and the number of parameters doesn't grow. A linear classifier with 11 features, if you give it an extra 100,000 training samples, still has 11 features.
+	- parametric: fixed capacity - add more samples and the number of parameters doesn't grow. A linear classifier with 11 features, if you give it an extra 100,000 training samples, still has 11 features.
 	- non parametric: move a decision tree from 100 samples and 5 splits to 100,000 samples and the tree can grow 100's of levels deep.
 
 ### Ensembles
@@ -123,12 +123,12 @@ also where we can add our domain intuition to modeling the data.
 
 
 ### Simpler isn't always better
-- If two models have the same accuracy but one is simpler than the other, do you take the simple one? Maybe, but for other reasons than accuracy — for example maybe for interpretability, but
+- If two models have the same accuracy but one is simpler than the other, do you take the simple one? Maybe, but for other reasons than accuracy - for example maybe for interpretability, but
 just because it's simpler doesn't mean it will generalize better. We see this in the ensembles where adding many learners may add complexity but lead to better predictability.
 
 
 ## Wrap up
-- So, XGBoost isn't all you need. Darn — we actually need to think about the domain we are modeling and getting enough examples.
+- So, XGBoost isn't all you need. Darn - we actually need to think about the domain we are modeling and getting enough examples.
 - We learned generalization is the name of the game; we need the model to learn signals that apply beyond the training set. There are many techniques that help us do this. A few this
 paper shows were picking the right representation by thinking through your hypothesis space and the limits of the number of potential solutions, how your model grows with the data (nonparametric
 vs parametric), getting high quality features and engineering to your domain knowledge, and striking a balance on model complexity.

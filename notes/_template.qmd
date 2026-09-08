@@ -1,7 +1,7 @@
 ---
 title: "Node N · Short title"
 subtitle: "The anchor / what this note covers"
-description: "One line — shows up in the notes listing and the RSS feed."
+description: "One line - shows up in the notes listing and the RSS feed."
 date: 2026-01-01
 categories: [paper notes]   # tags for the listing / feed
 draft: true   # remove when you're ready to publish this note

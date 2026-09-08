@@ -11,8 +11,8 @@ listing:
   fields: [date, title, description, categories]
 ---
 
-I forget things. Reading a paper once does basically nothing for my grug brain —
-it only sticks if I chew it up and write it back out in my own words. So this is
+I forget things. Reading a paper once does basically nothing for my grug brain.
+It only sticks if I chew it up and write it back out in my own words. So this is
 that pile of notes: mostly machine learning and the systems underneath it,
 re-explained until my brain finally agrees to keep them.
 
