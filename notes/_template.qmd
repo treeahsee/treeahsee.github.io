@@ -1,0 +1,30 @@
+---
+title: "Node N · Short title"
+subtitle: "The anchor / what this note covers"
+date: 2026-01-01
+draft: true   # remove when you're ready to publish this note
+---
+
+<!--
+Copy this file to notes/<n>-<slug>.qmd, then link it from the matching
+node in ../index.qmd with:  → [my notes](notes/<n>-<slug>.qmd)
+
+Live code works here just like node 1: chunks run from the project root, so
+you can `from bias_variance_decomp import ...` or write inline Python, e.g.
+
+```{python}
+print("hello from a live chunk")
+```
+-->
+
+## The tension
+<!-- the core tradeoff in your own words -->
+
+## What clicked
+<!-- the anchor's key idea, explained so a beginner would get it -->
+
+## Exercise
+<!-- what you did, and what you found -->
+
+## Keep
+<!-- the artifact: the thing you must be able to reproduce from memory -->
