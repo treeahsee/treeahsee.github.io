@@ -1,0 +1,19 @@
+# Quarto build output (regenerated on render / publish)
+/_site/
+/.quarto/
+
+# Keep _freeze/ committed so CI can render without re-executing code.
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.jupyter_cache/
+
+# Generated figure (the site renders it live from the script)
+/bias-variance.png
+
+# macOS
+.DS_Store
+
+**/*.quarto_ipynb

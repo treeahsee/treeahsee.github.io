@@ -1,0 +1,138 @@
+---
+title: "A Few Useful Things to Know about Machine Learning"
+subtitle: "Node 1 · ML foundations — my notes on Pedro Domingos' paper"
+date: 2026-09-07
+---
+
+## What is learning in ML?
+- What really is machine learning — some data input that predicts some output you care about? How do I choose the prediction algorithm? I heard XGBoost is all you
+need. Do we just throw XGBoost at all of our classification and regression problems? Maybe. We can also throw in k-means and maybe some reinforcement learning and then
+we have all of what we need.
+- But really we were partially right: machine learning takes some data input and returns a prediction. Does this dress make me look fat?  features [is_dress_black=1, can_see_toes=0] out[class1_youre_just_fat=1].
+- More importantly, machine learning is about generalizing from examples well.
+- How do we pick a good classifier or a good algorithm that can learn the examples and generalize well against unseen data?
+- Let's first take a look at the components that we need to make the machine learn.
+
+### Anatomy of a Learner
+- Representation
+	- The set of classifiers that can be learned, or the hypothesis space.
+	- Examples: K-nearest neighbor, Naive Bayes, Decision Trees, Neural Networks.
+- Evaluation
+	- This is how you tell if the classifier is any good, or better than another classifier in your hypothesis space.
+	- Examples: Accuracy, precision, recall, Squared Error.
+- Optimization
+	- Our hypothesis space may be very large, so we need a way to search among that space to find the best classifier.
+	- Examples: Greedy Search, Gradient Descent, Linear Programming.
+
+```
+   learner  =  Representation  +  Evaluation  +  Optimization
+   -----------------------------------------------------------
+                what shapes       how to score    how to search
+                it can take       a candidate     the space
+                KNN, trees        accuracy, MSE   gradient descent
+```
+
+- The model, like XGBoost, is only part of the learning. We are slightly joking about XGBoost but it is non-jokingly
+good at a wide variety of tasks because it casts a large hypothesis space (set of possible solutions) by using many
+weak learners (more on this later) and has built-in regularization **cough** generalization **cough**.
+
+## Generalization is what matters
+- Ok, we are ready to throw XGBoost and let it handle our optimization for us.
+
+- Why does generalization even matter? Train/Val/Test and cross validation is engrained in our heads, but what if we just skip that? But then we will overfit. Why
+is overfitting bad? Well, because the real goal of machine learning is to generalize beyond the data we have to train against.
+
+- Generalization matters because we will very likely never see the same data during test time that you saw in training. The paper gives an example for a spam filter that
+has 100,000 words, so there are 2^100,000 different possible inputs. You will never have the ability to train against all possible inputs, so your model needs to generalize
+so it performs well against unseen input.
+
+- The limits to the training examples mean that data alone is not enough, and that every learner must embody some knowledge or assumptions beyond the data it's given
+in order to generalize beyond it. This also means choosing a representation means picking one that can fit to the domain knowledge.
+	- Take for example a house price prediction: the data alone isn't enough; the representation bakes in an assumption.
+	- Something like K-Nearest-Neighbor assumes locality — similar houses have similar prices.
+	- Whereas a global linear function assumes price is one global formula over features.
+	- Domain experts already know this to some level; appraisers look at nearby comps to determine the price of your home.
+- In order to generalize there is a balance between a simple and complex representation. Our error can exist as incorrect assumptions about the data where we oversimplify the
+relationship between features and class. At the opposite end of the complexity spectrum we can overfit, fit to the signal AND the noise, resulting in high variance.
+
+```{python}
+#| label: fig-bias-variance
+#| fig-cap: "Same data, three complexities: underfit → just right → overfit. The spread of the thin curves *is* the variance."
+from bias_variance_decomp import run, plot_fits
+
+results = run()       # prints the bias^2 / variance / total-error table
+plot_fits(results);   # embeds the figure inline
+```
+
+The `sum` column dips then explodes — that U-shape *is* the bias-variance tradeoff.
+Degree 1 is all bias (underfit), degree 12's variance blows up (overfit), degree 3
+is the sweet spot. Both the table and the figure above are generated live from
+`bias_variance_decomp.py` every time this page builds.
+
+- Generalization becomes harder in higher dimensions as well. As the dimensions grow, the training set covers a dwindling fraction of your input space. In high
+dimensions all examples start to look alike.
+
+## What do we do about it?
+
+- So how do we get a learner to actually generalize? There are a few ways:
+	- inject more knowledge through features and domain intuition
+	- inject more evidence through more data, let the data constrain the hypothesis
+	- inject more models, combine many instead of betting on one
+
+### Features
+- The most important factor in a machine learning project is the features used.
+- Features that look irrelevant in isolation may be relevant in combination.
+- This is where machine learning in practice mixes both art and science; there is a lot of trial and error in feature design.
+- We talked about how our representation can limit or give us the ability to model the domain, but feature engineering is
+also where we can add our domain intuition to modeling the data.
+- Features in isolation may look irrelevant but be relevant in combination.
+	- XOR is a canonical case for this.
+	- Look at A or B by itself and it tells you nothing more than random chance.
+	- Modeling A & B together determines the class perfectly.
+
+```
+   A  B | A XOR B      A alone  -> 50/50, tells you nothing
+   -----+--------      B alone  -> 50/50, tells you nothing
+   0  0 |    0
+   0  1 |    1         irrelevant apart,
+   1  0 |    1         decisive together
+   1  1 |    0
+```
+
+- Running a learner with many features and figuring out which one is important can also be done, but is time consuming.
+
+### Moar Data
+- Usually more data beats a more clever algorithm.
+- Different learners can carve very different decision boundaries but still classify most new points the same way.
+- So to a first approximation, once you have enough data, which algorithm you picked matters less than getting more of it.
+- Fixed size learners vs learners that grow with the data
+	- parametric: fixed capacity — add more samples and the number of parameters doesn't grow. A linear classifier with 11 features, if you give it an extra 100,000 training samples, still has 11 features.
+	- non parametric: move a decision tree from 100 samples and 5 splits to 100,000 samples and the tree can grow 100's of levels deep.
+
+### Ensembles
+- Combining many learners, as opposed to the best single learner, often can result in much better results.
+- Bagging
+	- train many models in parallel on bootstrap resamples, then average/vote. Reduces variance. Random forests are this (plus random feature subsets).
+- Boosting
+	- train models sequentially; each new learner focuses on the examples previous ones got wrong, then weight them. Reduces bias (push it too far and it can overfit).
+
+```
+   Bagging (parallel)                 Boosting (sequential)
+   cuts variance                      cuts bias
+
+     [M1]  \                            [M1] -> [M2] -> [M3]
+     [M2]  --> vote / average                each learner fixes
+     [M3]  /                                 the last one's errors
+
+   models trained independently       models build on each other
+```
+
+### Simpler isn't always better
+- If two models have the same accuracy but one is simpler than the other, do you take the simple one? Maybe, but for other reasons than accuracy — for example maybe for interpretability, but
+just because it's simpler doesn't mean it will generalize better. We see this in the ensembles where adding many learners may add complexity but lead to better predictability.
+
+## Wrap up
+- So, XGBoost isn't all you need. Darn — we actually need to think about the domain we are modeling and getting enough examples.
+- We learned generalization is the name of the game; we need the model to learn signals that apply beyond the training set. There are many techniques that help us do this. A few this
+paper shows were picking the right representation by thinking through your hypothesis space and the limits of the number of potential solutions, how your model grows with the data (nonparametric
+vs parametric), getting high quality features and engineering to your domain knowledge, and striking a balance on model complexity.

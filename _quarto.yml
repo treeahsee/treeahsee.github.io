@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: _site
+  # Run code chunks from the project root so note pages can import modules
+  # that live at the top level (e.g. bias_variance_decomp.py).
+  execute-dir: project
+
+execute:
+  freeze: auto  # cache chunk output; re-run only when the code changes
+
+website:
+  title: "Study Notes"
+  # Set this once the repo exists, e.g.
+  # site-url: https://your-username.github.io
+  navbar:
+    left:
+      - text: "Roadmap"
+        href: index.qmd
+      - text: "1 · ML foundations"
+        href: notes/1-ml-foundations.qmd
+
+format:
+  html:
+    theme: custom.scss
+    page-layout: article   # single centered readable column
+    toc: true
+    toc-location: right
+    toc-title: "On this page"
+    anchor-sections: true
+    code-copy: true
+    code-tools: false
+    fig-align: center
+    highlight-style: github
