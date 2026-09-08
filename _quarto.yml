@@ -9,18 +9,25 @@ execute:
   freeze: auto  # cache chunk output; re-run only when the code changes
 
 website:
-  title: "Study Notes"
+  title: "treeahsee"
   site-url: https://treeahsee.github.io
   navbar:
-    left:
-      - text: "Roadmap"
-        href: index.qmd
-      - text: "1 · ML foundations"
-        href: notes/1-ml-foundations.qmd
+    right:
+      - text: "About"
+        href: about.qmd
+      - icon: github
+        href: https://github.com/treeahsee
+        aria-label: GitHub
+      - icon: rss
+        href: index.xml
+        aria-label: RSS
 
 format:
   html:
-    theme: custom.scss
+    # Warm-notebook theme with an automatic light/dark toggle.
+    theme:
+      light: theme-light.scss
+      dark: theme-dark.scss
     page-layout: article   # single centered readable column
     toc: true
     toc-location: right

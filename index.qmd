@@ -1,69 +1,24 @@
 ---
-title: "A systems & ML learning roadmap"
+title: "treeahsee"
+toc: false
+listing:
+  id: notes
+  contents: "notes/[0-9]*-*.qmd"
+  type: default
+  sort: "date desc"
+  categories: true
+  feed: true
+  fields: [date, title, description, categories]
 ---
 
-## The 8 nodes
+<!-- TODO: replace with 2–3 real lines about you, and add email/other links. -->
+Learning notes, written to teach myself — mostly machine learning and the
+systems underneath it. I read a paper or pull apart a system, then write it back
+in my own words until it sticks.
 
-Each node = **one tension → one anchor → one exercise → one artifact you keep**
-(a note *in your own words*; if you can't write it, you didn't learn it). Read
-the anchor, do the exercise, write the note, move on. Let curiosity pull you
-into optional depth — don't schedule it.
+[GitHub](https://github.com/treeahsee)
 
-### 1. ML foundations
-**Tension:** capacity vs generalization.
-**Anchor:** [*A Few Useful Things to Know About ML*](notes/1-ml-foundations.qmd).
-**Exercise:** design churn prediction — what worries you *before* the model?
-**Keep:** your list of failure modes (leakage, skew, overfitting) in plain words.
-→ [my notes](notes/1-ml-foundations.qmd)
+## Notes
 
-### 2. The machine
-**Tension:** compute vs memory vs IO — the wait is never where you think.
-**Anchor:** Jeff Dean's "Latency Numbers Every Programmer Should Know" —
-*memorize the orders of magnitude.* Bedrock everything else references.
-**Exercise:** for any slow thing, name the bound.
-**Keep:** the latency ladder, from memory.
-
-### 3. OS & concurrency
-**Tension:** isolation vs sharing; why parallelism is hard.
-**Anchor:** OSTEP — Process + Virtual Memory + "Concurrency: An Introduction."
-**Exercise:** trace what happens when you hit Enter in a shell.
-**Keep:** process-vs-thread + virtual-address in a paragraph.
-
-### 4. Networking
-**Tension:** round trips vs speed of light; where does function belong?
-**Anchor:** *End-to-End Arguments in System Design* (+ skim HPBN's TCP/TLS/HTTP).
-**Exercise:** `curl -v` a site, read the waterfall (DNS→TCP→TLS→TTFB).
-**Keep:** why distance hurts more than bandwidth.
-
-### 5. Storage & databases
-**Tension:** read-optimized vs write-optimized; RAM as a cache for disk.
-**Anchor:** DDIA Ch. 3 (B-trees vs LSM-trees).
-**Exercise:** `EXPLAIN ANALYZE` a real query; find where it picks index vs seq scan.
-**Keep:** when you'd choose LSM over B-tree.
-
-### 6. Distributed systems & consensus
-**Tension:** consistency vs availability (CAP).
-**Anchor:** **Dynamo** (AP) paired with **Raft** (CP) — the two poles.
-**Exercise:** design a highly-available key-value store; then say what changes
-if you need strong consistency.
-**Keep:** the CAP tradeoff and where each system sits.
-
-### 7. Data-intensive processing
-**Tension:** move compute to the data; the shuffle is the bottleneck.
-**Anchor:** **MapReduce** (+ know why Spark/RDDs replaced it).
-**Exercise:** process 10TB/day — what happens when one machine dies halfway?
-**Keep:** map→shuffle→reduce + why in-memory DAGs won.
-
-### 8. ML systems in production — **START HERE (it's your job)**
-**Tension:** the model is 5%; the system is 95%.
-**Anchor:** *Hidden Technical Debt in ML Systems* (+ *Rules of ML*).
-**Exercise:** trace a real FullStory path — event → feature → training →
-serving → monitoring — and find where training/serving skew could bite.
-**Keep:** that diagram, drawn from your actual product.
-
-### 9 (optional, once the rest feel solid). Modern AI as a systems problem
-**Tension:** memory bandwidth, not math.
-**Anchor:** *Attention Is All You Need* + *FlashAttention*.
-**Payoff — it's every earlier node wearing a GPU:** attention = node 5's "index
-the relationships," KV cache = node 2's "memory-bound," RAG = node 5's ANN
-indexing, LoRA = "don't rewrite, patch."
+::: {#notes}
+:::

@@ -1,0 +1,27 @@
+/*-- scss:defaults --*/
+
+// Warm-notebook palette — LIGHT. Change $accent to recolor the whole site.
+$accent: #c15f3c !default;        // clay / terracotta
+
+$body-bg: #faf7f0 !default;       // warm cream
+$body-color: #2c2722 !default;    // warm near-black
+$link-color: $accent !default;
+$border-color: #e7ded0 !default;  // soft warm hairline
+
+// Type: warm serif body for the notebook feel, system sans for headings.
+// All system fonts — no web-font downloads, so pages load instantly.
+// (Upgrade path: swap $font-family-base for a Google font like Fraunces or
+//  Newsreader if you want more character later.)
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  Helvetica, Arial, sans-serif !default;
+$font-family-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+  Consolas, "Liberation Mono", monospace !default;
+$font-family-base: Charter, "Iowan Old Style", "Palatino Linotype", Palatino,
+  Georgia, serif !default;
+$headings-font-family: $font-family-sans-serif !default;
+
+$font-size-root: 19px !default;
+$headings-font-weight: 640 !default;
+
+/*-- scss:rules --*/
+@import "theme-shared";

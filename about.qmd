@@ -1,0 +1,20 @@
+---
+title: "About"
+about:
+  template: trestles
+  links:
+    - icon: github
+      text: GitHub
+      href: https://github.com/treeahsee
+    # - icon: envelope
+    #   text: Email
+    #   href: mailto:you@example.com
+---
+
+<!-- TODO: replace with your real bio. -->
+Hi, I'm **treeahsee**. I'm an engineer learning the systems beneath machine
+learning from the ground up — and this is where I write what I learn, in my own
+words, until it sticks.
+
+I care about understanding things well enough to explain them simply. If a note
+here reads like a textbook summary, it isn't done yet.

@@ -1,0 +1,24 @@
+/*-- scss:defaults --*/
+
+// Warm-notebook palette — DARK. Same accent, lightened for contrast.
+$accent: #e08a5f !default;        // warmed-up clay for dark backgrounds
+
+$body-bg: #1e1b17 !default;       // deep warm brown-black
+$body-color: #e9e1d3 !default;    // warm off-white
+$link-color: $accent !default;
+$border-color: #3a342c !default;
+
+// Same type system as the light theme.
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  Helvetica, Arial, sans-serif !default;
+$font-family-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+  Consolas, "Liberation Mono", monospace !default;
+$font-family-base: Charter, "Iowan Old Style", "Palatino Linotype", Palatino,
+  Georgia, serif !default;
+$headings-font-family: $font-family-sans-serif !default;
+
+$font-size-root: 19px !default;
+$headings-font-weight: 640 !default;
+
+/*-- scss:rules --*/
+@import "theme-shared";
