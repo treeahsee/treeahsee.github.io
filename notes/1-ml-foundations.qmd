@@ -7,8 +7,8 @@ categories: [paper notes, machine learning]
 ---
 
 ## What is learning in ML?
-- What really is machine learning - some data input that predicts some output you care about? How do I choose the prediction algorithm? I heard XGBoost is all you
-need. Do we just throw XGBoost at all of our classification and regression problems? Maybe. We can also throw in k-means and maybe some reinforcement learning and then
+- What really is machine learning - some data input that predicts some output you care about? How do I choose the prediction algorithm? I heard [`XGBoost is all you
+need`](https://www.xgblog.ai/p/xgboost-is-all-you-need). Do we just throw XGBoost at all of our classification and regression problems? Maybe. We can also throw in k-means and maybe some reinforcement learning and then
 we have all of what we need.
 - But really we were partially right: machine learning takes some data input and returns a prediction. Does this dress make me look fat?  features [is_dress_black=1, can_see_toes=0] out[class1_youre_just_fat=1].
 - More importantly, machine learning is about generalizing from examples well.
