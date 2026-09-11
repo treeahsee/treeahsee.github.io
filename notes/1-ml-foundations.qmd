@@ -1,6 +1,6 @@
 ---
 title: "A Few Useful Things to Know about Machine Learning"
-subtitle: "Node 1 · ML foundations - my notes on Pedro Domingos' paper"
+subtitle: "ML foundations - my notes on Pedro Domingos' paper"
 description: "Domingos' paper in my own words: what learning is, why generalization is the whole game, and how we get there."
 date: 2026-09-07
 categories: [paper notes, machine learning]
