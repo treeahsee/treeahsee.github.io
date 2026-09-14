@@ -1,0 +1,194 @@
+---
+title: "Dynamic Programming"
+subtitle: "It's just programming, I promise"
+description: "Learning Notes from the first couple weeks of OMSCS Algorithms Course"
+date: 2026-09-08
+categories: [OMSCS, Algorithms]   # tags for the listing / feed
+---
+
+
+## Dynamic Programming, You mean Programming
+- What even *is* dynamic programming? When I was first introduced to the concept, it just felt like regular programming and honestly, it kinda is. The name sounds like a buzzword someone invented to make loops sound impressive.
+- The point of dynamic programming is a key one in computer science: remove redundant computations. When you solve a problem recursively
+you usually end up doing the same subproblem many times over. The classic example here is the fibonacci sequence notice how `fib(2)` gets recomputed over and over:
+
+```
+                     fib(5)
+                   /        \
+              fib(4)        fib(3)
+             /     \        /     \
+        fib(3)   fib(2)  fib(2)  fib(1)
+        /    \
+    fib(2)  fib(1)      ← fib(2) shows up 3 times, and it only gets worse
+```
+
+- Dynamic programming ends up producing really elegant, neat solutions. They have this quality where you look at the finished answer and go "yeah,
+I got it, that's simple" but do not be lulled into that trap. When you're facing the problem cold, there are some genuine logical leaps to make solutioning *forward*
+that feel obvious only when you're verifying in arrears.
+- There are a few common patterns that these dynamic programming problems tend to follow, and we'll demystify a couple of them here.
+
+## DP Approaches
+- How do we avoid recomputation then? There are two main approaches a top down and a bottom up approach.
+  - The top down approach caches your computations allowing you to do a look up instead
+of recomputing, this is called memoization.
+  - The bottom up approach builds up from a base case, this is called tabulation.
+- My CS Masters class, shout out OMSCS, focuses on tabulation, so this article only dives into that specifically.
+
+## Patterns
+A handful of shapes cover most DP problems. The hard part isn't the code, it's
+spotting *which shape you're in*.
+
+| Pattern | State | Smells like |
+|---|---|---|
+| **Ending at `i`** | best solution that *ends at* element `i` | LIS, max subarray |
+| **Prefix** | best over the *first `i`* items | climbing stairs, house robber |
+| **Two prefixes** | `T[i][j]` over first `i` of A, first `j` of B | LCS, edit distance |
+| **Interval** | `T[i][j]` over the *subarray* `i..j`, split at `k` | matrix chain |
+| **Capacity** | `T[i][w]` = first `i` items within budget `w` | knapsack |
+
+## Example 1 — Hotel Stops (1D)
+
+You're going on a road trip. The road starts at mile 0, and there are `n` hotels
+at mileposts $a_1 < a_2 < \dots < a_n$. You can stop at any hotel, but you *must*
+end the trip at the last one. Ideally you'd drive exactly 200 miles a day, so a
+day covering $x$ miles costs a penalty of $(200 - x)^2$ — the further from 200,
+the worse it stings. Minimize the total penalty.
+
+```
+   start                                          must
+   ● ────── ● ────── ● ────── ● ────── ● ────── ●  end
+   0        50       125      200      300      500
+            a₁       a₂       a₃       a₄       a₅
+```
+
+My first instinct was to be greedy — just drive as close to 200 miles as I can each
+day. Greedy locks you into a good-looking first leg that strands you later. This is an
+**ending-at-`i`** problem: fill the table with the best cost to *end a day* at each
+hotel. Since the trip must finish at the last hotel `n`, the answer we want is `T[n]`.
+
+The trick to DP is usually to think about the last decision. To get to some hotel $a_i$
+you had to come from some *earlier* hotel $a_j$, or you drove
+there straight from the start. If it came from $a_j$, that last leg is $a_i - a_j$
+miles costing $(200 - (a_i - a_j))^2$, plus the best cost of getting to $a_j$,
+which is already in the table we are building: $T[j]$. If it came from the start, the leg is just
+$a_i$ miles, costing $(200 - a_i)^2$.
+
+> **State** &nbsp; `T[i]` = min total penalty for a trip ending at hotel $a_i$
+> **Base** &nbsp; `T[1] = (200 - a_1)^2` — the first hotel can only be reached from the start
+> **Recurrence** &nbsp; $T[i] = \min\Big( \underbrace{(200 - a_i)^2}_{\text{from the start}},\ \ \min_{1 \le j < i}\big( \underbrace{T[j] + (200 - (a_i - a_j))^2}_{\text{via hotel } a_j} \big) \Big)$
+> **Order** &nbsp; fill `i` left to right; answer at `T[n]` (the trip must end at the last hotel)
+> **Runtime** &nbsp; `O(n²)` — `n` cells, each scanning up to `n` earlier hotels
+
+
+Filling the table:
+
+```
+   i        1      2      3      4      5
+   aᵢ      50    125    200    300    500
+   T[i]  22500   5625      0   6250   6250
+                                       ▲ answer
+```
+
+`T[5] = 6250`. The optimal stops are
+**0 → 125 → 300 → 500**.
+
+
+## Example 2 — Unique Paths (2D grid)
+
+This is a fun one because it's so obvious *after the fact*, but when I first looked
+at it and thought about the brute force solution, my mind had a hard time keeping
+track of all the potential paths.
+
+> A robot sits in the top-left corner of an `m × n` grid. It can only move **right**
+> or **down**, one cell at a time, and wants to reach the bottom-right corner. How
+> many **distinct paths** can it take?
+
+```
+   ● ─▶─ □ ─▶─ □
+   │     │     │      ● start   (top-left)
+   ▼     ▼     ▼      ★ goal    (bottom-right)
+   □ ─▶─ □ ─▶─ □      moves: right or down only
+   │     │     │
+   ▼     ▼     ▼
+   □ ─▶─ □ ─▶─ ★
+```
+
+Unlike the last example where we could use a 1-D table to build our solution, this one naturally gives way to a 2-D table to match the grid.
+
+Last decision again: to *arrive* at cell `(i, j)`, I either came from exactly the cell **above** `(i-1, j)` or the cell to the **left**
+`(i, j-1)`. So the number of ways to reach `(i, j)` is just the sum of the ways to
+reach those two.
+
+> **State** &nbsp; `T[i][j]` = number of distinct paths from the start to cell `(i, j)`
+> **Base** &nbsp; the entire top row and left column are `1`
+> **Recurrence** &nbsp; `T[i][j] = T[i-1][j] + T[i][j-1]`
+> **Order** &nbsp; fill row by row; answer at `T[m][n]`
+> **Runtime** &nbsp; `O(m·n)` — one grid, constant work per cell
+
+
+Filling a 3×3 grid, each inner cell = the cell above plus the cell to its left:
+
+```
+   1   1   1
+   1   2   3
+   1   3   6   ← answer
+```
+
+## Example 3 — Knapsack, without repetition (capacity)
+
+You're loading up a daypack for a hike. There are `n` snacks — a granola bar, a
+suspiciously heavy apple, a single glorious chocolate croissant — each with a
+**weight** `wᵢ` and a **yum** value `vᵢ`, and your pack holds at most `W` grams.
+You've only got one of each snack, so you either toss it in or leave it behind. No,
+you cannot bring three croissants. Maximize the total yumminess you carry.
+
+The tells: you're choosing a **subset** of items under a **budget** (`W`). That's
+the **capacity** pattern — a 2D table indexed by *which items you've considered* and
+*how much room is left*.
+
+Last decision: look at item `i`. Two choices:
+
+- **Leave it.** Your best is whatever you'd get from the first `i-1` items with the
+  same room: `T[i-1][w]`.
+- **Take it.** You gain `vᵢ`, but it eats `wᵢ` of your capacity, so the rest comes
+  from the first `i-1` items with `w - wᵢ` room left: `vᵢ + T[i-1][w - wᵢ]`.
+
+Take the better of the two.
+
+> **State** &nbsp; `T[i][w]` = max value using the first `i` items with capacity `w`
+> **Base** &nbsp; `T[0][w] = 0` (no items), `T[i][0] = 0` (no room)
+> **Recurrence** &nbsp; `T[i][w] = max( T[i-1][w],  vᵢ + T[i-1][w - wᵢ] )` &nbsp; *(second term only if `wᵢ ≤ w`)*
+> **Order** &nbsp; fill row by row; answer at `T[n][W]`
+> **Runtime** &nbsp; `O(n·W)`
+
+::: {.callout-important}
+## The one detail that makes it "without repetition"
+Both branches look at row **`i-1`**, never row `i`. That's what forbids reuse: once
+you've decided about item `i`, you drop to the previous row so you can't grab it
+again.
+:::
+
+With snacks `A` = granola `(w2, v3)`, `B` = apple `(w3, v4)`, `C` = croissant `(w4, v5)` and a pack of `W = 5`:
+
+```
+              w=0   1    2    3    4    5
+   (none)      0    0    0    0    0    0
+   + A(2,3)    0    0    3    3    3    3
+   + B(3,4)    0    0    3    4    4    7
+   + C(4,5)    0    0    3    4    5    7   ← answer
+```
+
+`T[3][5] = 7`, achieved by packing `A` and `B` (weights `2 + 3 = 5`, yum
+`3 + 4 = 7`). The croissant is the tastiest single snack but doesn't fit alongside
+anything good; tragic, but the table doesn't care about your feelings.
+
+
+## Wrap Up
+- So it turns out dynamic programming really *is* just programming you've just stopped redoing your own homework. 
+- The two ways to avoid recomputation are **memoization** (top-down, cache as you recurse) and **tabulation** (bottom-up, fill from a base case). Same answer, different direction.
+- The actual hard part was **spotting the shape**. We saw a few different ones:
+  - **ending-at-`i`** (hotels), where every earlier stop competes to be your predecessor
+  - **2D grid** (unique paths), where a cell is just the two cells feeding into it
+  - **capacity** (knapsack), where one index — `i-1` vs `i` — is the whole difference between "one croissant" and "infinite croissants"
+- The closest thing to a single trick is this: **think about the last decision**. Assume every smaller subproblem is already solved, ask what the final choice could have been, and take the best of your options. Solutioning forward is hard; verifying in arrears is easy*ier*. DP just lets you build the whole thing out of the easy direction.
+
