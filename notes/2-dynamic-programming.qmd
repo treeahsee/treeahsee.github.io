@@ -2,7 +2,7 @@
 title: "Dynamic Programming"
 subtitle: "It's just programming, I promise"
 description: "Learning Notes from the first couple weeks of OMSCS Algorithms Course"
-date: 2026-09-08
+date: 2026-09-13
 categories: [OMSCS, Algorithms]   # tags for the listing / feed
 ---
 
