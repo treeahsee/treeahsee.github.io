@@ -74,9 +74,13 @@ which is already in the table we are building: $T[j]$. If it came from the start
 $a_i$ miles, costing $(200 - a_i)^2$.
 
 > **State** &nbsp; `T[i]` = min total penalty for a trip ending at hotel $a_i$
+>
 > **Base** &nbsp; `T[1] = (200 - a_1)^2` — the first hotel can only be reached from the start
+>
 > **Recurrence** &nbsp; $T[i] = \min\Big( \underbrace{(200 - a_i)^2}_{\text{from the start}},\ \ \min_{1 \le j < i}\big( \underbrace{T[j] + (200 - (a_i - a_j))^2}_{\text{via hotel } a_j} \big) \Big)$
+>
 > **Order** &nbsp; fill `i` left to right; answer at `T[n]` (the trip must end at the last hotel)
+>
 > **Runtime** &nbsp; `O(n²)` — `n` cells, each scanning up to `n` earlier hotels
 
 
@@ -120,9 +124,13 @@ Last decision again: to *arrive* at cell `(i, j)`, I either came from exactly th
 reach those two.
 
 > **State** &nbsp; `T[i][j]` = number of distinct paths from the start to cell `(i, j)`
+>
 > **Base** &nbsp; the entire top row and left column are `1`
+>
 > **Recurrence** &nbsp; `T[i][j] = T[i-1][j] + T[i][j-1]`
+>
 > **Order** &nbsp; fill row by row; answer at `T[m][n]`
+>
 > **Runtime** &nbsp; `O(m·n)` — one grid, constant work per cell
 
 
@@ -156,9 +164,13 @@ Last decision: look at item `i`. Two choices:
 Take the better of the two.
 
 > **State** &nbsp; `T[i][w]` = max value using the first `i` items with capacity `w`
+>
 > **Base** &nbsp; `T[0][w] = 0` (no items), `T[i][0] = 0` (no room)
+>
 > **Recurrence** &nbsp; `T[i][w] = max( T[i-1][w],  vᵢ + T[i-1][w - wᵢ] )` &nbsp; *(second term only if `wᵢ ≤ w`)*
+>
 > **Order** &nbsp; fill row by row; answer at `T[n][W]`
+>
 > **Runtime** &nbsp; `O(n·W)`
 
 ::: {.callout-important}
@@ -189,6 +201,6 @@ anything good; tragic, but the table doesn't care about your feelings.
 - The actual hard part was **spotting the shape**. We saw a few different ones:
   - **ending-at-`i`** (hotels), where every earlier stop competes to be your predecessor
   - **2D grid** (unique paths), where a cell is just the two cells feeding into it
-  - **capacity** (knapsack), where one index — `i-1` vs `i` — is the whole difference between "one croissant" and "infinite croissants"
+  - **capacity** (knapsack), where one index `i-1` vs `i` is the whole difference between "one croissant" and "infinite croissants"
 - The closest thing to a single trick is this: **think about the last decision**. Assume every smaller subproblem is already solved, ask what the final choice could have been, and take the best of your options. Solutioning forward is hard; verifying in arrears is easy*ier*. DP just lets you build the whole thing out of the easy direction.
 
