@@ -7,10 +7,17 @@ categories: [OMSCS, Algorithms]   # tags for the listing / feed
 ---
 
 
-## The runtime is hiding in the recursion
+## What this is
 
-- Once you start writing recursive algorithms, the runtime stops being something you can just eyeball off a `for` loop. The cost is defined *in terms of itself*: to know how long `T(n)` takes, you first need to know `T(n-1)`, which needs `T(n-2)`, and so on. That self-referential thing is a **recurrence relation**, and the whole game is turning it into a plain big-O.
-- There are two flavors worth knowing cold. The first is the **subtract-a-bit** kind — `T(n) = T(n-1) + (something)` — where each recursive call shaves the input down by a constant. You solve these by **unrolling**. The second is the **divide-and-conquer** kind — `T(n) = aT(n/b) + f(n)` — where each call splits the input into fractions. You solve those with the **tree-ratio** trick (a friendlier way to reach the Master Theorem).
+This week in my algorithms class i spent some time coputing the complexity of recusrive algorithms. The cost is written
+*in terms of itself* — to know `T(n)` you need `T(n-1)`, which needs `T(n-2)`,
+and so on. That's a **recurrence relation**, and the whole task is turning it
+into a plain big-O.
+
+Two shapes cover what I've seen so far:
+
+- **subtract-a-bit** — `T(n) = T(n-1) + (something)`, where each call shaves the input by a constant. Solved by **unrolling**.
+- **divide-and-conquer** — `T(n) = aT(n/b) + f(n)`, where each call splits the input into fractions. Solved with the **tree-ratio** trick.
 
 ## Unrolling
 
