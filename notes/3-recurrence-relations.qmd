@@ -1,0 +1,219 @@
+---
+title: "Recurrence Relations"
+subtitle: "How to read the runtime hiding inside a recursion"
+description: "Learning Notes from the OMSCS Algorithms Course unrolling recurrences and the tree-ratio shortcut for divide-and-conquer."
+date: 2026-09-19
+categories: [OMSCS, Algorithms]   # tags for the listing / feed
+---
+
+
+## The runtime is hiding in the recursion
+
+- Once you start writing recursive algorithms, the runtime stops being something you can just eyeball off a `for` loop. The cost is defined *in terms of itself*: to know how long `T(n)` takes, you first need to know `T(n-1)`, which needs `T(n-2)`, and so on. That self-referential thing is a **recurrence relation**, and the whole game is turning it into a plain big-O.
+- There are two flavors worth knowing cold. The first is the **subtract-a-bit** kind — `T(n) = T(n-1) + (something)` — where each recursive call shaves the input down by a constant. You solve these by **unrolling**. The second is the **divide-and-conquer** kind — `T(n) = aT(n/b) + f(n)` — where each call splits the input into fractions. You solve those with the **tree-ratio** trick (a friendlier way to reach the Master Theorem).
+
+## Unrolling
+
+The idea behind unrolling is to keep substituting the recurrence into
+itself until you can *see* the pattern, then count how many terms.
+
+Two things can happen to the term you add at each step:
+
+> **Case A** &nbsp; the added term is **constant** — you keep adding the same `2`,
+> so you collect `2 + 2 + 2 + …`
+>
+> **Case B** &nbsp; the added term **depends on the input** — you add `n`, then
+> `n-1`, then `n-2`, so you collect `n + (n-1) + (n-2) + …`
+
+Case A gives you a linear sum. Case B gives you one of the sum of powers series. That's really the whole taxonomy.
+
+### Case A — the added term is constant
+
+Start by writing the recurrence, then the same recurrence one step down, and
+again:
+
+```
+   T(n)   = T(n-1) + 2
+   T(n-1) = T(n-2) + 2
+   T(n-2) = T(n-3) + 2
+```
+
+Now substitute each line back into the one above it and watch the constant
+accumulate:
+
+- **Step 1:** $T(n) = T(n-1) + 2$
+- **Step 2:** $T(n) = [T(n-2) + 2] + 2 = T(n-2) + 2(2)$
+- **Step 3:** $T(n) = [T(n-3) + 2] + 2 + 2 = T(n-3) + 3(2)$
+
+After `k` steps the pattern is clear you've added `2` exactly `k` times:
+
+$$T(n) = T(n-k) + 2k$$
+
+You hit the base case when `k = n`, which leaves `n` copies of the constant.
+
+> **Result** &nbsp; $T(n) = O(n)$
+
+::: {.callout-warning}
+## Count the work, not the steps
+This is where I tripped moving beyond the linear case: "there are `n` recursive steps, so it's
+`O(n)`." That instinct is only right *here*, in Case A, because each step does
+**constant** work `n` steps × a constant really is `O(n)`.
+
+But big-O isn't the *number of steps*, it's the *sum of the work across them*.
+The number of steps only tells you **how many terms are in the sum**; the size of
+each term is what sets the class. The moment per-step work depends on `n` (Case B
+below), the two diverge same `n` steps, but the sum blows past linear.
+
+```
+   Case A: n steps, each does 2 work        Case B: n steps, each does k work
+   ▁ ▁ ▁ ▁ ▁ ▁ ▁ ▁   → n × 2 = O(n)          ▁ ▂ ▃ ▄ ▅ ▆ ▇ █   → Σk = O(n²)
+   count of bars = total                     area under bars = total
+```
+
+:::
+
+### Case B(a) — the added term grows linearly
+
+Same procedure, but now the term you add shrinks as you descend:
+
+```
+   T(n)   = T(n-1) + n
+   T(n-1) = T(n-2) + (n-1)
+   T(n-2) = T(n-3) + (n-2)
+```
+
+Substituting back:
+
+- **Step 1:** $T(n) = T(n-1) + n$
+- **Step 2:** $T(n) = [T(n-2) + (n-1)] + n = T(n-2) + (n-1) + n$
+- **Step 3:** $T(n) = T(n-3) + (n-2) + (n-1) + n$
+
+After `k` steps you've collected a running tail of terms:
+
+$$T(n) = T(n-k) + (n-k+1) + \dots + (n-1) + n$$
+
+Run it all the way down to `T(0)` and that tail is just the sum of the first `n`
+integers — the Gauss sum:
+
+$$T(0) + \frac{n(n+1)}{2}$$
+
+> **Result** &nbsp; $T(n) = O(n^2)$
+
+### Case B(b) — the added term grows quadratically
+
+ The added cost is now `n²`:
+
+```
+   T(n)   = T(n-1) + n²
+   T(n-1) = T(n-2) + (n-1)²
+   T(n-2) = T(n-3) + (n-2)²
+```
+
+Substituting back:
+
+- **Step 1:** $T(n) = T(n-1) + n^2$
+- **Step 2:** $T(n) = [T(n-2) + (n-1)^2] + n^2 = T(n-2) + (n-1)^2 + n^2$
+- **Step 3:** $T(n) = T(n-3) + (n-2)^2 + (n-1)^2 + n^2$
+
+After `k` steps:
+
+$$T(n) = T(n-k) + (n-k+1)^2 + \dots + (n-1)^2 + n^2$$
+
+All the way down, that's the sum of the first `n` squares:
+
+$$T(0) + \frac{n(n+1)(2n+1)}{6}$$
+
+> **Result** &nbsp; $T(n) = O(n^3)$
+
+::: {.callout-tip}
+## The pattern to keep
+Notice the pattern across all three: adding a term that grows like $n^d$ at each
+of `n` levels lands you at $O(n^{d+1})$. Constant (`d = 0`) → `O(n)`; linear
+(`d = 1`) → `O(n²)`; quadratic (`d = 2`) → `O(n³)`.
+:::
+
+## Divide and Conquer - the tree ratio
+
+Unrolling breaks down the moment the input gets *divided* instead of *decremented*.
+For recurrences of the shape
+
+$$T(n) = aT(n/b) + O(n^d)$$
+
+it's easier to picture the recursion as a tree and ask a single question: **does
+the work grow, shrink, or stay flat as you go down the levels?** Three knobs
+control the answer:
+
+> **`a`** &nbsp; the **branching factor** — how many subproblems (child nodes) each call spawns
+>
+> **`b`** &nbsp; the **shrinkage factor** — how much the input shrinks at each step
+>
+> **`d`** &nbsp; the **work exponent** — the exponent on the non-recursive work `f(n)`
+
+Two facts fall out of the tree's geometry:
+
+- **Height** &nbsp; the tree bottoms out after $L = \log_b n$ levels
+- **Leaves** &nbsp; the bottom level holds $a^L = n^{\log_b a}$ of them
+
+### The three rules
+
+Let `r` be the ratio of work between one level and the level above it. Everything
+hinges on where `r` sits relative to `1`:
+
+| Ratio | Who dominates | Total work |
+|---|---|---|
+| **`r = 1`** | every level does equal work | $f(n) \cdot \log_b n$ |
+| **`r < 1`** | the **root** dominates | $f(n)$ |
+| **`r > 1`** | the **leaves** dominate | $n^{\log_b a}$ |
+
+The intuition: if each level does *less* work than the one above (`r < 1`), the
+top of the tree is the whole cost. If each level does *more* (`r > 1`), the
+explosion of leaves at the bottom is the whole cost. If it's a wash (`r = 1`),
+you pay the root's work once per level, and there are $\log_b n$ levels.
+
+## The 4-step exam derivation
+
+Whenever you see $T(n) = aT(n/b) + f(n)$, run the same four steps every time:
+
+> **Step 1 — Root work (level 0).** &nbsp; Read off the non-recursive part. Level 0 work is just $f(n)$.
+>
+> **Step 2 — Level 1 work.** &nbsp; Multiply the number of subproblems `a` by the work on each subproblem of size `n/b`: $a \cdot (n/b)^d$.
+>
+> **Step 3 — The ratio.** &nbsp; Divide level 1 by level 0: $r = \dfrac{a \cdot (n/b)^d}{f(n)}$.
+>
+> **Step 4 — Apply the geometric rule.**
+>
+> - $r = 1$ &nbsp;→&nbsp; Total $= f(n) \cdot \log_b n$
+> - $r < 1$ &nbsp;→&nbsp; Total $= f(n)$ (root dominates)
+> - $r > 1$ &nbsp;→&nbsp; Total $= a^{\text{height}} = a^{\log_b n} = n^{\log_b a}$ (leaves dominate)
+
+## Walkthrough — two contrasting cases
+
+### `T(n) = 3T(n/2) + n`
+
+1. **Level 0 work:** $n$
+2. **Level 1 work:** $3 \cdot \tfrac{n}{2} = 1.5n$
+3. **Ratio:** $r = \tfrac{1.5n}{n} = 1.5$
+4. **Apply the rule:** $r = 1.5 > 1$, so work *grows* down the tree and the bottom level dominates.
+   - Height $L = \log_2 n$
+   - Leaves $= 3^L = 3^{\log_2 n} = n^{\log_2 3}$
+
+> **Result** &nbsp; $T(n) = O(n^{\log_2 3}) \approx O(n^{1.585})$
+
+### `T(n) = 2T(n/2) + n`
+
+This is the mergesort recurrence, and it's the knife-edge `r = 1` case.
+
+1. **Level 0 work:** $n$
+2. **Level 1 work:** $2 \cdot \tfrac{n}{2} = n$
+3. **Ratio:** $r = \tfrac{n}{n} = 1$
+4. **Apply the rule:** $r = 1$, so every level does the same `n` work.
+   - Height $L = \log_2 n$
+   - Leaves $= 2^L = 2^{\log_2 n} = n^{\log_2 2} = n$
+
+> **Result** &nbsp; $T(n) = O(n \log n)$
+
+## Wrap Up
+
+- A recurrence is just the runtime written in terms of itself.
+- **Subtract-a-bit** (`T(n) = T(n-1) + f(n)`): **unroll** it, spot the series, and remember that adding an $n^d$ term at each of `n` levels gives $O(n^{d+1})$.
+- **Divide-and-conquer** (`T(n) = aT(n/b) + f(n)`): picture the tree and compute the level-to-level **ratio `r`**. `r < 1` → the root wins, `r > 1` → the leaves win, `r = 1` → every level ties and you pay a $\log_b n$ tax.
