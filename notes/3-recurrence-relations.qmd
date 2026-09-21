@@ -9,8 +9,8 @@ categories: [OMSCS, Algorithms]   # tags for the listing / feed
 
 ## What this is
 
-This week in my algorithms class i spent some time coputing the complexity of recusrive algorithms. The cost is written
-*in terms of itself* — to know `T(n)` you need `T(n-1)`, which needs `T(n-2)`,
+This week in my algorithms class i spent some time computing the complexity of recusrive algorithms. The cost is written
+*in terms of itself* to know `T(n)` you need `T(n-1)`, which needs `T(n-2)`,
 and so on. That's a **recurrence relation**, and the whole task is turning it
 into a plain big-O.
 
